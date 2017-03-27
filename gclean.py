@@ -6,6 +6,7 @@ import random
 import time
 import html2text
 from email.utils import parsedate_tz, mktime_tz, formatdate
+import signal
 
 import config
 
@@ -34,7 +35,16 @@ def clean_text(text):
   text = re.sub('\r\n\r\n[\r\n]*', '\r\n\r\n', text)
   return text
 
+kill_after = False
+
 if __name__ == '__main__':
+  def kb_int(signal, frame):
+    global kill_after
+    print("Keyboard interupt. Killing after finishing this message...")
+    kill_after = True
+
+  signal.signal(signal.SIGINT, kb_int)
+
   def get_labels(message_id):
       result = mail.uid('fetch',message_id,'X-GM-LABELS')
       print('Getting current labels...%s' % result[0])
@@ -99,8 +109,6 @@ if __name__ == '__main__':
   
   while search_result == 'OK' and message_ids[0]:
       print str(len(message_ids[0].split(' '))) + ' messages left'
-      print 'Kill me now... (waiting 2 seconds)'
-      time.sleep(2)
       
       for message_id in [message_ids[0].split(' ')[0]]:
           has_plain = False
@@ -204,5 +212,7 @@ if __name__ == '__main__':
   
                   print('Deleting original message...' + str(mail.uid('store', message_id, '+FLAGS', '\\Deleted')[0]))
                   print('Expunging mailbox...' + mail.expunge()[0])
-      
+
+      if kill_after:
+        exit(0)
       search_result, message_ids = search()
