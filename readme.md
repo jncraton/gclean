@@ -1,6 +1,6 @@
 # gclean
 
-Strips the size of email message by removing attachements and/or converting messages to plain text. Behavior is controlled by assigning labels to messages.
+Strips the size of Gmail messages by removing attachements and/or converting messages to plain text. Behavior is controlled by assigning labels to messages.
 
 ## Usage
 
