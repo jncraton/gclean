@@ -18,6 +18,8 @@ def clean_text(text):
   ' text'
   >>> clean_text('|')
   ''
+  >>> clean_text(' | |')
+  ''
   >>> clean_text('-=')
   ''
   >>> clean_text('| \t')
@@ -29,10 +31,12 @@ def clean_text(text):
   text = re.sub('^\|[\| \t]*', '', text, flags=re.M)
   text = re.sub('^[\-\=][\-\=\| \t]*', '', text, flags=re.M)
   text = re.sub('^  +', ' ', text, flags=re.M)
-  text = re.sub('^ *\r$', '\r', text, flags=re.M)
+  text = re.sub('^[\| ]*$', '', text, flags=re.M)
+  text = re.sub('^[\| ]*\r$', '\r', text, flags=re.M)
   text = re.sub('^ *$', '', text, flags=re.M)
-  text = re.sub('^[\r\n]+', '', text)
   text = re.sub('\r\n\r\n[\r\n]*', '\r\n\r\n', text)
+  text = re.sub('\r\r[\r]*', '\r\r', text)
+  text = re.sub('\n\n[\n]*', '\n\n', text)
   return text
 
 kill_after = False
