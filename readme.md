@@ -2,6 +2,10 @@
 
 Strips the size of Gmail messages by removing attachements and/or converting messages to plain text. Behavior is controlled by assigning labels to messages.
 
+Note that this process is not lossless. Data permanently removed in order to simplify messages for both storage and export. I use this to allow me to save more messages and speed up the process of backing up my Gmail account.
+
+I offer no guarantees that this won't destroy your data. Use at your own risk.
+
 ## Usage
 
 1. Create config.py (see config.example.py)
