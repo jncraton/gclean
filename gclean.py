@@ -74,13 +74,15 @@ if __name__ == '__main__':
       content = match.group(1)
       
       headers = ''
+      kept = []
       
       # Remove useless headers
       for header in msg.keys():
           if not header.lower().startswith('x-') and not header.lower() in ['thread-topic','in-reply-to','references','thread-index', 'message-id','content-class','content-language','received','return-path','received-spf','authentication-results','dkim-signature','disposition-notification-to','resent-from','accept-language','domainkey-signature','delivered-to', 'feedback-id', 'list-unsubscribe', 'errors-to', 'precedence', 'bounces-to']:
-              print 'Keeping header ' + header
+              kept.append(header)
               headers += header + ': ' + msg[header] + '\r\n'
-  
+      print('Kept headers:%s' % ','.join(kept))
+      
       headers += 'message-id: %08x\r\n' % random.randint(0,4294967296) #nonce to create a "different" message
       
       return (headers + content)
