@@ -1,15 +1,3 @@
-# Strips the size of email message by removing attachements and/or
-# converting messages to plain text. Behavior is controlled by asiigning
-# labels to messages
-#
-# Usage
-#
-# All Mail should be the only accessible IMAP folder
-# Messages to be cleaned should be given the '_clean' label
-# Cleaned messages will be labeled '_cleaned' and marked unread
-# Messages in the inbox are ignored, as they can't be fully deleted
-#     (inbox is an IMAP folder, so it can't be removed from all folders)
-
 import time
 import re
 import imaplib
