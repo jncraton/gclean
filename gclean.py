@@ -37,7 +37,7 @@ def clean_text(text):
 if __name__ == '__main__':
   def get_labels(message_id):
       result = mail.uid('fetch',message_id,'X-GM-LABELS')
-      print 'Getting current labels' + str(result)
+      print('Getting current labels...%s' % result[0])
       
       labels_string = result[1][0]
               
@@ -106,7 +106,7 @@ if __name__ == '__main__':
           print 'Fetching ' + message_id
   
           flags = mail.uid('fetch', message_id, 'FLAGS')
-          print 'Getting current flags' + str(flags)
+          print('Getting current flags...%s' % flags[0])
           
           is_read = '\seen' in flags[1][0].lower()
               
@@ -169,38 +169,38 @@ if __name__ == '__main__':
                         else:
                             print 'Keeping ' + type + ' from ' + message_id
           
-          print 'Replacing ' + message_id + ' ' + msg['Subject'][:65]
-          
+          print('Replacing ' + message_id + ' ' + msg['Subject'][:65])          
           date = mktime_tz(parsedate_tz(msg['Date']))
           
           result = mail.append('[Google Mail]/All Mail','',date,cleaned_headers(msg))
-          print 'Adding new message ' + str(result)
+          print('Added new message...%s' % result[0])
           if result[0] == 'OK':
               match = re.match(r".*APPENDUID 1 (\d+)", result[1][0])
               new_id = match.group(1)
               
-              print 'Adding cleaned label ' + str(mail.uid('store', new_id, '+X-GM-LABELS', '_cleaned'))
+              labels.append('_cleaned')
+              
               if converted_to_plain:
-                print 'Adding _converted_to_plain label ' + str(mail.uid('store', new_id, '+X-GM-LABELS', '_converted_to_plain'))
+                labels.append('_converted_to_plain')
               
               if is_read:
-                  print 'Marking as read ' + str(mail.uid('store' ,new_id, '+FLAGS', '\\Seen'))
+                  print('Marking as read...%s' % mail.uid('store' ,new_id, '+FLAGS', '\\Seen')[0])
   
               result = mail.uid('fetch', message_id, '(RFC822)')
-              print 'Refetching original message ' + str(result[0])
+              print('Fetched original message...%s' % result[0])
               if new_id == message_id:
                   print 'New message given current UID. Aborting.'
               elif not result[1][0]:
                   print 'Appended message replaced current message (no changes?)'
               else:
                   for label in labels:
-                      if not label == '_clean' and not label == '_cleaned' and not label == 'inbox':
+                      if not label == '_clean' and not label == '_zero_att':
                           result = mail.uid('store', new_id, '+X-GM-LABELS', label)
-                          print 'Adding label ' + label + ' ' + str(result)
+                          print 'Added label ' + label + '...' + result[0]
                           
                           assert result[0] == 'OK'
   
-                  print 'Deleting original message ' + str(mail.uid('store', message_id, '+FLAGS', '\\Deleted'))
-                  print 'Expunging mailbox ' + str(mail.expunge())
+                  print('Deleting original message...' + str(mail.uid('store', message_id, '+FLAGS', '\\Deleted')[0]))
+                  print('Expunging mailbox...' + mail.expunge()[0])
       
       search_result, message_ids = search()
