@@ -31,7 +31,10 @@ def clean_text(text):
   >>> clean_text('| \ta\\n  text')
   'a\\n text'
   """
-  text = text.decode('utf8')
+  try:
+    text = text.decode('utf8')
+  except:
+    pass
   text = re.sub('\t', ' ', text, flags=re.M)
   text = re.sub('^\|[\| \t]*', '', text, flags=re.M)
   text = re.sub('^[\-\=][\-\=\| \t]*', '', text, flags=re.M)
@@ -44,7 +47,12 @@ def clean_text(text):
   text = re.sub('\r\n\r\n[\r\n]*', '\r\n\r\n', text)
   text = re.sub('\r\r[\r]*', '\r\r', text)
   text = re.sub('\n\n[\n]*', '\n\n', text)
-  return text.encode('utf8')
+  try:
+    text = text.encode('utf8')
+  except:
+    pass
+    
+  return text
 
 kill_after = False
 
