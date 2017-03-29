@@ -20,8 +20,10 @@ def clean_text(text):
   ''
   >>> clean_text(' | |')
   ''
-  >>> clean_text(u' \u00a0| \u00a0 |  \\r\\ntest\\r\\n') # Contains non-breaking spaces
-  u'\\r\\ntest\\r\\n'
+  >>> clean_text(' | | text')
+  ' | | text'
+  >>> clean_text(u' \u00a0| \u00a0 |  \\r\\ntest\\r\\n'.encode('utf8')) # Contains non-breaking spaces
+  '\\r\\ntest\\r\\n'
   >>> clean_text('-=')
   ''
   >>> clean_text('| \t')
@@ -29,19 +31,20 @@ def clean_text(text):
   >>> clean_text('| \ta\\n  text')
   'a\\n text'
   """
+  text = text.decode('utf8')
   text = re.sub('\t', ' ', text, flags=re.M)
   text = re.sub('^\|[\| \t]*', '', text, flags=re.M)
   text = re.sub('^[\-\=][\-\=\| \t]*', '', text, flags=re.M)
   text = re.sub('^  +', ' ', text, flags=re.M)
 
-  text = re.sub(u'^[\| \t\u00a0]*\r$', '\r', text, flags=re.M|re.UNICODE)
-  text = re.sub(u'^[\| \t\u00a0]*$', '', text, flags=re.M|re.UNICODE)
+  text = re.sub(ur'^[\| \t\u00A0\uC2A0]*\r$', '\r', text, flags=re.M|re.UNICODE)
+  text = re.sub(ur'^[\| \t\u00A0\uC2A0]*$', '', text, flags=re.M|re.UNICODE)
 
   text = re.sub('^ *$', '', text, flags=re.M)
   text = re.sub('\r\n\r\n[\r\n]*', '\r\n\r\n', text)
   text = re.sub('\r\r[\r]*', '\r\r', text)
   text = re.sub('\n\n[\n]*', '\n\n', text)
-  return text
+  return text.encode('utf8')
 
 kill_after = False
 
@@ -162,6 +165,7 @@ if __name__ == '__main__':
                   if text_part and '_zero_att' in labels:
                     # Switch message to text/plain instead of multipart
                     print("Preparing to write as text/plain message")
+
                     msg.set_payload(clean_text(text_part.get_payload(decode=True)))
                     for header, value in text_part.items():
                       print("Merging %s header" % header)
