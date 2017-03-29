@@ -20,6 +20,8 @@ def clean_text(text):
   ''
   >>> clean_text(' | |')
   ''
+  >>> clean_text(u' \u00a0| \u00a0 |  \\r\\ntest\\r\\n') # Contains non-breaking spaces
+  u'\\r\\ntest\\r\\n'
   >>> clean_text('-=')
   ''
   >>> clean_text('| \t')
@@ -31,8 +33,10 @@ def clean_text(text):
   text = re.sub('^\|[\| \t]*', '', text, flags=re.M)
   text = re.sub('^[\-\=][\-\=\| \t]*', '', text, flags=re.M)
   text = re.sub('^  +', ' ', text, flags=re.M)
-  text = re.sub('^[\| ]*$', '', text, flags=re.M)
-  text = re.sub('^[\| ]*\r$', '\r', text, flags=re.M)
+
+  text = re.sub(u'^[\| \t\u00a0]*\r$', '\r', text, flags=re.M|re.UNICODE)
+  text = re.sub(u'^[\| \t\u00a0]*$', '', text, flags=re.M|re.UNICODE)
+
   text = re.sub('^ *$', '', text, flags=re.M)
   text = re.sub('\r\n\r\n[\r\n]*', '\r\n\r\n', text)
   text = re.sub('\r\r[\r]*', '\r\r', text)
