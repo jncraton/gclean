@@ -107,7 +107,7 @@ if __name__ == '__main__':
       
       # Remove useless headers
       for header in msg.keys():
-          if not header.lower().startswith('x-') and not header.lower() in ['thread-topic','in-reply-to','references','thread-index', 'message-id','content-class','content-language','received','return-path','received-spf','authentication-results','dkim-signature','disposition-notification-to','resent-from','accept-language','domainkey-signature','delivered-to', 'feedback-id', 'list-unsubscribe', 'errors-to', 'precedence', 'bounces-to', 'pp-correlation-id', 'amq-delivery-message-id','content-disposition','content-id']:
+          if not header.lower().startswith('x-') and not header.lower() in ['thread-topic','in-reply-to','references','thread-index', 'message-id','content-class','content-language','received','return-path','received-spf','authentication-results','dkim-signature','disposition-notification-to','resent-from','accept-language','domainkey-signature','delivered-to', 'feedback-id', 'list-unsubscribe', 'errors-to', 'precedence', 'bounces-to', 'pp-correlation-id', 'amq-delivery-message-id','content-disposition','content-id','arc-seal','arc-message-signature','arc-authentication-results','authentication-results-original','spamdiagnosticoutput','spamdiagnosticmetadata']:
               kept.append(header)
               headers += header + ': ' + msg[header] + '\r\n'
       print('Kept headers:%s' % ','.join(kept))
