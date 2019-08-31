@@ -205,7 +205,8 @@ if __name__ == '__main__':
           result = mail.append('[Google Mail]/All Mail','',date,cleaned_headers(msg))
           print('Added new message...%s' % result[0])
           if result[0] == 'OK':
-              match = re.match(r".*APPENDUID 1 (\d+)", result[1][0])
+              print(result)
+              match = re.match(r".*APPENDUID \d (\d+)", result[1][0])
               new_id = match.group(1)
               
               labels.append('_cleaned')
