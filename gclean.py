@@ -121,8 +121,8 @@ if __name__ == '__main__':
   mail.login(config.email, config.password)
 
   def search():
-      mail.select("[Google Mail]/All Mail")
-      return mail.uid('search', None, 'X-GM-RAW', "(label:_clean OR label:_zero_att) -label:_cleaned -in:inbox")
+      mail.select('"[Google Mail]/All Mail"')
+      return mail.uid('search', None, 'X-GM-RAW', '"(label:_clean OR label:_zero_att) -label:_cleaned -in:inbox"')
   
   search_result, message_ids = search()
   
