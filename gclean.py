@@ -68,7 +68,7 @@ if __name__ == '__main__':
       result = mail.uid('fetch',message_id,'X-GM-LABELS')
       print(('Getting current labels...%s' % result[0]))
       
-      labels_string = result[1][0]
+      labels_string = result[1][0].decode()
               
       labels_string = re.sub(r'\d+ \(X-GM-LABELS \(', '', labels_string)
       labels_string = re.sub(r'\) UID \d+\)', '', labels_string)
@@ -127,9 +127,9 @@ if __name__ == '__main__':
   search_result, message_ids = search()
   
   while search_result == 'OK' and message_ids[0]:
-      print(f"{len(str(message_ids[0]).split(' '))} messages left")
+      print(f"{len(message_ids[0].split(b' '))} messages left")
 
-      for message_id in [str(message_ids[0]).split(' ')[0]]:
+      for message_id in [message_ids[0].decode().split(' ')[0]]:
           has_plain = False
           
           print('Fetching ' + message_id)
@@ -137,7 +137,7 @@ if __name__ == '__main__':
           flags = mail.uid('fetch', message_id, 'FLAGS')
           print(('Getting current flags...%s' % flags[0]))
           
-          is_read = '\seen' in flags[1][0].lower()
+          is_read = b'\seen' in flags[1][0].lower()
               
           typ, msg_data = mail.uid('fetch', message_id, '(RFC822)')
           
