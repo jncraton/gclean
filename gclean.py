@@ -127,9 +127,9 @@ if __name__ == '__main__':
   search_result, message_ids = search()
   
   while search_result == 'OK' and message_ids[0]:
-      print(str(len(message_ids[0].split(' '))) + ' messages left')
-      
-      for message_id in [message_ids[0].split(' ')[0]]:
+      print(f"{len(str(message_ids[0]).split(' '))} messages left")
+
+      for message_id in [str(message_ids[0]).split(' ')[0]]:
           has_plain = False
           
           print('Fetching ' + message_id)
