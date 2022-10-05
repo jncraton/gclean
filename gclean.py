@@ -148,7 +148,7 @@ if __name__ == '__main__':
           for response_part in msg_data:
               if isinstance(response_part, tuple):
                   print('Parsing ' + message_id)
-                  msg = email.message_from_string(response_part[1])
+                  msg = email.message_from_string(response_part[1].decode())
   
                   text_part = None
   
@@ -202,11 +202,11 @@ if __name__ == '__main__':
           print(('Replacing ' + message_id + ' ' + msg['Subject'][:65]))          
           date = mktime_tz(parsedate_tz(msg['Date']))
           
-          result = mail.append('[Google Mail]/All Mail','',date,cleaned_headers(msg))
-          print(('Added new message...%s' % result[0]))
+          result = mail.append('"[Google Mail]/All Mail"','',date,cleaned_headers(msg).encode())
+          print(f'Added new message... {result[0]}')
           if result[0] == 'OK':
               print(result)
-              match = re.match(r".*APPENDUID \d (\d+)", result[1][0])
+              match = re.match(r".*APPENDUID \d (\d+)", result[1][0].decode())
               new_id = match.group(1)
               
               labels.append('_cleaned')
@@ -215,10 +215,11 @@ if __name__ == '__main__':
                 labels.append('_converted_to_plain')
               
               if is_read:
-                  print(('Marking as read...%s' % mail.uid('store' ,new_id, '+FLAGS', '\\Seen')[0]))
+                  result = mail.uid('store' ,new_id, '+FLAGS', '\\Seen')
+                  print(f"Marking as read...{result[0]}")
   
               result = mail.uid('fetch', message_id, '(RFC822)')
-              print(('Fetched original message...%s' % result[0]))
+              print(f'Fetched original message...{result[0]}')
               if new_id == message_id:
                   print('New message given current UID. Aborting.')
               elif not result[1][0]:
@@ -227,7 +228,7 @@ if __name__ == '__main__':
                   for label in labels:
                       if not label == '_clean' and not label == '_zero_att':
                           result = mail.uid('store', new_id, '+X-GM-LABELS', label)
-                          print('Added label ' + label + '...' + result[0])
+                          print(f'Added label {label} {result[0]}')
                           
                           assert result[0] == 'OK'
   
