@@ -223,11 +223,15 @@ if __name__ == "__main__":
                                 h = html2text.HTML2Text()
                                 h.ignore_links = True
                                 h.ignore_images = True
-                                text = h.handle(
-                                    part.get_payload(decode=True).decode("utf8")
-                                )
+                                for charset in [part.get_content_charset(), 'utf-8', 'latin1']:
+                                    try:
+                                        payload = part.get_payload(decode=True).decode(charset)
+                                        break
+                                    except UnicodeDecodeError:
+                                        pass
+                                text = h.handle(payload)
                                 text_part = email.message.Message()
-                                text_part.set_payload(text, "utf8")
+                                text_part.set_payload(text, part.get_content_charset())
 
                     if text_part and "_zero_att" in labels:
                         # Switch message to text/plain instead of multipart
