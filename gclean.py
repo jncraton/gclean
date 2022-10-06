@@ -216,9 +216,15 @@ if __name__ == "__main__":
                                 h = html2text.HTML2Text()
                                 h.ignore_links = True
                                 h.ignore_images = True
-                                for charset in [part.get_content_charset(), 'utf-8', 'latin1']:
+                                for charset in [
+                                    part.get_content_charset(),
+                                    "utf-8",
+                                    "latin1",
+                                ]:
                                     try:
-                                        payload = part.get_payload(decode=True).decode(charset)
+                                        payload = part.get_payload(decode=True).decode(
+                                            charset
+                                        )
                                         break
                                     except UnicodeDecodeError:
                                         pass
@@ -230,9 +236,15 @@ if __name__ == "__main__":
                         # Switch message to text/plain instead of multipart
                         print("Preparing to write as text/plain message")
 
-                        for charset in [text_part.get_content_charset(), 'utf-8', 'latin1']:
+                        for charset in [
+                            text_part.get_content_charset(),
+                            "utf-8",
+                            "latin1",
+                        ]:
                             try:
-                                payload = text_part.get_payload(decode=True).decode(charset)
+                                payload = text_part.get_payload(decode=True).decode(
+                                    charset
+                                )
                                 break
                             except UnicodeDecodeError:
                                 pass
@@ -301,9 +313,9 @@ if __name__ == "__main__":
                 else:
                     labels = [l for l in labels if not l in ("_clean", "_zero_att")]
                     # Quote labels as needed
-                    labels = [f'"{l}"' if ' ' in l else l for l in labels]
+                    labels = [f'"{l}"' if " " in l else l for l in labels]
 
-                    result = mail.uid("store", new_id, "+X-GM-LABELS", ' '.join(labels))
+                    result = mail.uid("store", new_id, "+X-GM-LABELS", " ".join(labels))
                     print(f"Added labels: {labels} {result[0]}")
 
                     assert result[0] == "OK"
