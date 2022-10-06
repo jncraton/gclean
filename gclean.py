@@ -230,7 +230,14 @@ if __name__ == "__main__":
                         # Switch message to text/plain instead of multipart
                         print("Preparing to write as text/plain message")
 
-                        msg.set_payload(clean_text(text_part.get_payload(decode=True).decode()))
+                        for charset in [text_part.get_content_charset(), 'utf-8', 'latin1']:
+                            try:
+                                payload = text_part.get_payload(decode=True).decode(charset)
+                                break
+                            except UnicodeDecodeError:
+                                pass
+
+                        msg.set_payload(clean_text(payload))
                         for header, value in list(text_part.items()):
                             print(("Merging %s header" % header))
                             del msg[header]
