@@ -199,9 +199,9 @@ if __name__ == "__main__":
 
             for response_part in msg_data:
                 if isinstance(response_part, tuple):
-                    print("Parsing " + message_id + " " + msg["Subject"][:65])
-
                     msg = email.message_from_string(response_part[1].decode())
+
+                    print("Parsing " + message_id + " " + msg["Subject"][:65])
 
                     text_part = None
 
