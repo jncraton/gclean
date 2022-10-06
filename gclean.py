@@ -301,6 +301,8 @@ if __name__ == "__main__":
                 else:
                     for label in labels:
                         if not label == "_clean" and not label == "_zero_att":
+                            if ' ' in label:
+                                label = f'"{label}"'
                             result = mail.uid("store", new_id, "+X-GM-LABELS", label)
                             print(f"Added label {label} {result[0]}")
 
