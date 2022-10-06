@@ -23,7 +23,7 @@ def clean_text(text):
     ''
     >>> clean_text(' | | text')
     ' | | text'
-    >>> clean_text(u' \\u00a0| \\u00a0 |  \\r\\ntest\\r\\n'.encode('utf8')) # Contains non-breaking spaces
+    >>> clean_text(u' \\u00a0| \\u00a0 |  \\r\\ntest\\r\\n') # Contains non-breaking spaces
     '\\r\\ntest\\r\\n'
     >>> clean_text('-=')
     ''
@@ -32,10 +32,6 @@ def clean_text(text):
     >>> clean_text('| \ta\\n  text')
     'a\\n text'
     """
-    try:
-        text = text.decode("utf8")
-    except:
-        pass
     text = re.sub("\t", " ", text, flags=re.M)
     text = re.sub("^\|[\| \t]*", "", text, flags=re.M)
     text = re.sub("^[\-\=][\-\=\| \t]*", "", text, flags=re.M)
@@ -48,10 +44,6 @@ def clean_text(text):
     text = re.sub("\r\n\r\n[\r\n]*", "\r\n\r\n", text)
     text = re.sub("\r\r[\r]*", "\r\r", text)
     text = re.sub("\n\n[\n]*", "\n\n", text)
-    try:
-        text = text.encode("utf8")
-    except:
-        pass
 
     return text
 
@@ -238,7 +230,7 @@ if __name__ == "__main__":
                         # Switch message to text/plain instead of multipart
                         print("Preparing to write as text/plain message")
 
-                        msg.set_payload(clean_text(text_part.get_payload(decode=True)))
+                        msg.set_payload(clean_text(text_part.get_payload(decode=True).decode()))
                         for header, value in list(text_part.items()):
                             print(("Merging %s header" % header))
                             del msg[header]
