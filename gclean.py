@@ -299,14 +299,14 @@ if __name__ == "__main__":
                 elif not result[1][0]:
                     print("Appended message replaced current message (no changes?)")
                 else:
-                    for label in labels:
-                        if not label == "_clean" and not label == "_zero_att":
-                            if ' ' in label:
-                                label = f'"{label}"'
-                            result = mail.uid("store", new_id, "+X-GM-LABELS", label)
-                            print(f"Added label {label} {result[0]}")
+                    labels = [l for l in labels if not l in ("_clean", "_zero_att")]
+                    # Quote labels as needed
+                    labels = [f'"{l}"' if ' ' in l else l for l in labels]
 
-                            assert result[0] == "OK"
+                    result = mail.uid("store", new_id, "+X-GM-LABELS", ' '.join(labels))
+                    print(f"Added labels: {labels} {result[0]}")
+
+                    assert result[0] == "OK"
 
                     print(
                         (
