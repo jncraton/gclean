@@ -2,6 +2,7 @@ import time
 import re
 import imaplib
 import email
+import quopri
 import random
 import time
 import html2text
@@ -249,7 +250,6 @@ if __name__ == "__main__":
                             except UnicodeDecodeError:
                                 pass
 
-                        msg.set_payload(clean_text(payload))
                         for header, value in list(text_part.items()):
                             print(("Merging %s header" % header))
                             del msg[header]
@@ -257,6 +257,7 @@ if __name__ == "__main__":
                         # Force quoted-printable encoding
                         del msg["Content-Transfer-Encoding"]
                         msg.add_header("Content-Transfer-Encoding", "quoted-printable")
+                        msg.set_payload(quopri.encodestring(clean_text(payload).encode('utf-8')))
                         converted_to_plain = True
                     else:
                         # Leave as multipart and zero extra sections
