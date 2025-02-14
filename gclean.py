@@ -34,8 +34,8 @@ def clean_text(text):
     'a\\n text'
     """
     text = re.sub("\t", " ", text, flags=re.M)
-    text = re.sub("^\|[\| \t]*", "", text, flags=re.M)
-    text = re.sub("^[\-\=][\-\=\| \t]*", "", text, flags=re.M)
+    text = re.sub(r"^\|[\| \t]*", "", text, flags=re.M)
+    text = re.sub(r"^[\-\=][\-\=\| \t]*", "", text, flags=re.M)
     text = re.sub("^  +", " ", text, flags=re.M)
 
     text = re.sub(r"^[\| \t\u00A0\uC2A0]*\r$", "\r", text, flags=re.M | re.UNICODE)
@@ -182,7 +182,7 @@ if __name__ == "__main__":
             flags = mail.uid("fetch", message_id, "FLAGS")
             print(("Getting current flags...%s" % flags[0]))
 
-            is_read = b"\seen" in flags[1][0].lower()
+            is_read = b"\\seen" in flags[1][0].lower()
 
             typ, msg_data = mail.uid("fetch", message_id, "(RFC822)")
 
